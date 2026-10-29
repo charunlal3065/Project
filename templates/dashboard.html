@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Performance Hub</title>
+  <meta name="description" content="Your personal AI-powered student performance analytics dashboard.">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dashboard-page">
+  <canvas id="bg-canvas"></canvas>
+
+  <div class="db-layout">
+
+    <!-- ── SIDEBAR ─────────────────────────────────── -->
+    <aside class="db-sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <span class="sidebar-brand-name">Perf Hub</span>
+      </div>
+
+      <div class="sidebar-section-label">Menu</div>
+      <a href="/dashboard" class="sidebar-item active">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="#predict-section" class="sidebar-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Run Analysis
+      </a>
+      <a href="#history-section" class="sidebar-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        History
+      </a>
+
+      <div class="sidebar-spacer"></div>
+
+      <div class="sidebar-user">
+        <div class="sidebar-user-name">{{ username }}</div>
+        <div class="sidebar-user-role">Student Analyst</div>
+      </div>
+      <a href="/logout" class="sidebar-logout">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
+      </a>
+    </aside>
+
+    <!-- ── MAIN ───────────────────────────────────── -->
+    <main class="db-main">
+
+      <!-- Top bar -->
+      <div class="db-topbar">
+        <div>
+          <div class="db-greeting">
+            Hello, <span>{{ username }}</span> 👋
+          </div>
+          <div class="db-date" id="db-date"></div>
+        </div>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="stats-row">
+        <div class="stat-card blue">
+          <div class="stat-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">Total Scenarios</div>
+            <div class="stat-value" data-val="{{ stats.total }}" data-suffix="">{{ stats.total }}</div>
+          </div>
+        </div>
+
+        <div class="stat-card green">
+          <div class="stat-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">Avg Predicted Score</div>
+            <div class="stat-value" data-val="{{ stats.avg }}" data-suffix="%" data-float="1">{{ stats.avg }}%</div>
+          </div>
+        </div>
+
+        <div class="stat-card red">
+          <div class="stat-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">High Risk Scenarios</div>
+            <div class="stat-value" data-val="{{ stats.high_risk }}" data-suffix="">{{ stats.high_risk }}</div>
+          </div>
+        </div>
+      </div>
+
+      {% if error %}
+      <div class="db-alert db-alert-error">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        {{ error }}
+      </div>
+      {% endif %}
+
+      <!-- Main grid -->
+      <div class="db-grid">
+
+        <!-- LEFT: Input + Result -->
+        <div>
+          <!-- PREDICTION FORM -->
+          <div class="card" id="predict-section">
+            <div class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Run Performance Analysis
+            </div>
+            <div class="card-subtitle">Enter your current learning metrics to get an AI-predicted exam score.</div>
+
+            <form action="/predict" method="POST" id="predict-form">
+              <div class="form-grid">
+
+                <div class="form-group">
+                  <label class="form-label" for="StudyHours">📚 Study Hours (Daily)</label>
+                  <input class="form-input" type="number" step="0.1" min="0" max="24"
+                    name="StudyHours" id="StudyHours" placeholder="e.g. 6.5" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="Attendance">📅 Attendance Rate (%)</label>
+                  <input class="form-input" type="number" step="0.1" min="0" max="100"
+                    name="Attendance" id="Attendance" placeholder="e.g. 90.0" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="OnlineCourses">🎓 Online Courses Completed</label>
+                  <input class="form-input" type="number" step="1" min="0" max="20"
+                    name="OnlineCourses" id="OnlineCourses" placeholder="e.g. 3" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="AssignmentCompletion">✅ Assignment Completion (%)</label>
+                  <input class="form-input" type="number" step="0.1" min="0" max="100"
+                    name="AssignmentCompletion" id="AssignmentCompletion" placeholder="e.g. 85.0" required>
+                </div>
+
+                <div class="form-group full">
+                  <label class="form-label" for="StressLevel">
+                    😓 Stress Level — <span id="StressLevel-val" style="color:#a78bfa;">5</span>/10
+                  </label>
+                  <input class="form-range" type="range" min="1" max="10" step="0.5"
+                    name="StressLevel" id="StressLevel" value="5">
+                  <input type="hidden" name="StressLevel" id="StressLevel-hidden" value="5">
+                </div>
+
+              </div>
+
+              <button type="submit" class="btn-predict" id="predict-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                Predict My Score
+              </button>
+            </form>
+          </div>
+
+          <!-- RESULT -->
+          {% if prediction is defined and prediction is not none %}
+          <div class="card" style="margin-top: 0;">
+            <div class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+              Analysis Result
+            </div>
+            <div class="result-banner">
+              <!-- Animated SVG ring -->
+              <div class="score-ring">
+                <svg viewBox="0 0 110 110">
+                  <circle class="ring-bg" cx="55" cy="55" r="45"/>
+                  <circle class="ring-fill" cx="55" cy="55" r="45"
+                    data-score="{{ prediction }}"
+                    style="stroke-dasharray: {{ (2 * 3.14159 * 45) | round(1) }}; stroke-dashoffset: {{ (2 * 3.14159 * 45) | round(1) }};"
+                  />
+                </svg>
+                <div class="score-center">
+                  <span class="score-number">{{ prediction }}</span>
+                  <span class="score-pct">/ 100</span>
+                </div>
+              </div>
+
+              <div class="score-label">Predicted Exam Score</div>
+
+              {% if prediction >= 75 %}
+              <span class="score-badge badge-high">🏆 High Performance</span>
+              <p class="score-tip">Excellent! Keep up your study habits and maintain attendance for continued success.</p>
+              {% elif prediction >= 60 %}
+              <span class="score-badge badge-medium">⚡ Moderate Risk</span>
+              <p class="score-tip">Good standing. Consider increasing study hours or reducing stress to push into the high-performance zone.</p>
+              {% else %}
+              <span class="score-badge badge-low">⚠️ Academic Risk</span>
+              <p class="score-tip">Immediate action recommended. Focus on attendance and daily study habits to improve outcomes.</p>
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- RIGHT: Chart + History -->
+        <div>
+
+          <!-- CHART -->
+          {% if graph_data is defined and graph_data %}
+          <div class="card">
+            <div class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              Factor Breakdown
+            </div>
+            <div class="card-subtitle">Normalized to 0–100 scale for comparison</div>
+            <div class="chart-wrap">
+              <canvas id="factorChart"></canvas>
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- HISTORY -->
+          <div class="card" id="history-section">
+            <div class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Scenario History
+            </div>
+            <div class="card-subtitle">All your past predictions, newest first</div>
+
+            {% if history %}
+            <div class="tbl-wrap">
+              <table class="hist-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Study</th>
+                    <th>Attend</th>
+                    <th>Online</th>
+                    <th>Assign</th>
+                    <th>Stress</th>
+                    <th>Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for row in history %}
+                  <tr>
+                    <td style="white-space:nowrap; color: var(--clr-muted); font-size:0.8rem;">
+                      {% if row.created_at %}
+                        {% if row.created_at is string %}
+                          {{ row.created_at[:16] }}
+                        {% else %}
+                          {{ row.created_at.strftime('%b %d, %H:%M') }}
+                        {% endif %}
+                      {% else %}N/A{% endif %}
+                    </td>
+                    <td>{{ row.study_hours }}h</td>
+                    <td>{{ row.attendance }}%</td>
+                    <td>{{ row.online_courses }}</td>
+                    <td>{{ row.assignment_completion }}%</td>
+                    <td>{{ row.stress_level }}/10</td>
+                    <td>
+                      {% set s = row.predicted_score | round(1) %}
+                      {% if s >= 75 %}
+                        <span class="score-pill pill-high">{{ s }}%</span>
+                      {% elif s >= 60 %}
+                        <span class="score-pill pill-medium">{{ s }}%</span>
+                      {% else %}
+                        <span class="score-pill pill-low">{{ s }}%</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+              <div class="empty-state-icon">🔮</div>
+              <p>No predictions yet.<br>Run your first analysis to get started!</p>
+            </div>
+            {% endif %}
+          </div>
+
+        </div>
+      </div><!-- /db-grid -->
+    </main>
+  </div><!-- /db-layout -->
+
+  <script src="/static/js/script.js"></script>
+
+  <!-- Date -->
+  <script>
+    const d = new Date();
+    document.getElementById('db-date').textContent =
+      d.toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  </script>
+
+  <!-- Sync range slider with hidden input (avoids duplicate name) -->
+  <script>
+    const slider = document.getElementById('StressLevel');
+    const hidden = document.getElementById('StressLevel-hidden');
+    const display = document.getElementById('StressLevel-val');
+    if (slider && hidden) {
+      slider.addEventListener('input', () => {
+        hidden.value  = slider.value;
+        if (display) display.textContent = slider.value;
+      });
+    }
+  </script>
+
+  <!-- Fix: form should only send one StressLevel value -->
+  <script>
+    const form = document.getElementById('predict-form');
+    if (form) {
+      form.addEventListener('submit', function() {
+        const rangeInput = document.getElementById('StressLevel');
+        const hiddenInput = document.getElementById('StressLevel-hidden');
+        if (rangeInput && hiddenInput) {
+          hiddenInput.value = rangeInput.value;
+          rangeInput.removeAttribute('name'); // prevent duplicate submission
+        }
+      });
+    }
+  </script>
+
+  <!-- Chart.js -->
+  {% if graph_data is defined and graph_data %}
+  <script>
+  (function() {
+    function renderChart() {
+      const canvas = document.getElementById('factorChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const raw = {{ graph_data | tojson }};
+      if (!raw || raw.length < 6) return;
+
+      const labels   = ['Study hrs', 'Attendance', 'Online', 'Assignments', 'Stress', 'Score'];
+      const display  = [
+        Math.min(raw[0] * 10, 100),
+        raw[1],
+        Math.min(raw[2] * 10, 100),
+        raw[3],
+        Math.min(raw[4] * 10, 100),
+        raw[5]
+      ];
+
+      const score   = raw[5];
+      const accent  = score >= 75 ? '#34d399' : score >= 60 ? '#fbbf24' : '#f87171';
+      const accentA = score >= 75 ? 'rgba(52,211,153,0.8)' : score >= 60 ? 'rgba(251,191,36,0.8)' : 'rgba(248,113,113,0.8)';
+
+      const baseColor   = 'rgba(108,99,255,0.65)';
+      const baseBorder  = 'rgba(108,99,255,1)';
+      const bgColors    = Array(5).fill(baseColor).concat([accentA]);
+      const borColors   = Array(5).fill(baseBorder).concat([accent]);
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Value (normalized)',
+            data: display,
+            backgroundColor: bgColors,
+            borderColor: borColors,
+            borderWidth: 2,
+            borderRadius: 8,
+            borderSkipped: false,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 1000, easing: 'easeOutQuart' },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(13,18,48,0.95)',
+              borderColor: 'rgba(108,99,255,0.4)',
+              borderWidth: 1,
+              padding: 12,
+              titleColor: '#a78bfa',
+              bodyColor: '#f1f5f9',
+              callbacks: {
+                label: ctx => ` ${ctx.parsed.y.toFixed(1)} / 100`
+              }
+            }
+          },
+          scales: {
+            y: {
+              min: 0, max: 100,
+              grid: { color: 'rgba(255,255,255,0.06)' },
+              ticks: { color: '#64748b', font: { size: 11 } },
+              border: { color: 'rgba(255,255,255,0.06)' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: '#94a3b8', font: { size: 11 } },
+              border: { color: 'rgba(255,255,255,0.06)' }
+            }
+          }
+        }
+      });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', renderChart);
+    } else {
+      renderChart();
+    }
+  })();
+  </script>
+  {% endif %}
+
+</body>
+</html>

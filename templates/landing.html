@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Performance Hub — AI-Powered Student Analytics</title>
+  <meta name="description" content="Predict, track, and improve academic performance using machine learning. Get instant insights on study habits and exam outcomes.">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="landing-page">
+
+  <!-- Particle canvas -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- NAV -->
+  <nav class="land-nav">
+    <a href="/" class="nav-brand">
+      <div class="nav-brand-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+      </div>
+      Performance Hub
+    </a>
+    <div class="nav-links">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#how" class="nav-link">How it works</a>
+      <a href="/login" class="nav-link">Login</a>
+      <a href="/signup" class="nav-cta">Get Started →</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-glow"></div>
+    <div>
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Powered by Machine Learning
+      </div>
+      <h1 class="hero-title">
+        Unlock Every Student's<br><span class="grad">Full Potential</span>
+      </h1>
+      <p class="hero-subtitle">
+        Input learning factors and get AI-driven score predictions instantly.
+        Understand what's holding you back — and what can push you forward.
+      </p>
+      <div class="hero-actions">
+        <a href="/signup" class="btn-hero btn-hero-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Start Analyzing Free
+        </a>
+        <a href="/login" class="btn-hero btn-hero-ghost">
+          Already have an account
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-value" data-count="97" data-suffix="%" id="hc1">0%</div>
+          <div class="hero-stat-label">Prediction Accuracy</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value" data-count="5" id="hc2" data-suffix=" Factors">0 Factors</div>
+          <div class="hero-stat-label">Analyzed Simultaneously</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value" data-count="3" id="hc3" data-suffix="s">0s</div>
+          <div class="hero-stat-label">Prediction Time</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <div class="max-w">
+      <div style="text-align:center; margin-bottom: 3.5rem;">
+        <div class="section-label">✦ Why Choose Us</div>
+        <h2 class="section-title">Everything you need to succeed</h2>
+        <p class="section-desc" style="margin: 0 auto;">
+          Our platform combines cutting-edge ML with an intuitive interface to give students and educators clear, actionable insights.
+        </p>
+      </div>
+      <div class="features-grid">
+        <div class="feat-card">
+          <div class="feat-icon violet">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <div class="feat-title">ML Predictions</div>
+          <div class="feat-desc">Our Random Forest model trained on thousands of data points delivers highly accurate exam score forecasts in seconds.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon cyan">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <div class="feat-title">Visual Analytics</div>
+          <div class="feat-desc">Beautiful interactive charts show exactly how each factor — study time, attendance, stress — contributes to your score.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          </div>
+          <div class="feat-title">Scenario Tracking</div>
+          <div class="feat-desc">Save every analysis and compare scenarios over time. Watch how improvements in one factor lift your overall score.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon yellow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="feat-title">Secure & Private</div>
+          <div class="feat-desc">Your data stays yours. Each account is isolated with session-based auth and encrypted database storage.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how" style="background: rgba(255,255,255,0.02); border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06);">
+    <div class="max-w" style="display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;">
+      <div>
+        <div class="section-label">✦ Process</div>
+        <h2 class="section-title">Three steps to clarity</h2>
+        <p class="section-desc">From raw inputs to actionable insights in under a minute.</p>
+      </div>
+      <div class="steps-list">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-body">
+            <div class="step-title">Enter Your Learning Data</div>
+            <p class="step-desc">Input daily study hours, attendance rate, online courses completed, assignment completion %, and your self-reported stress level (1–10).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-body">
+            <div class="step-title">AI Analyzes Instantly</div>
+            <p class="step-desc">Our pre-trained Random Forest Regressor processes all five metrics simultaneously against thousands of historical patterns.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-body">
+            <div class="step-title">Act on Results</div>
+            <p class="step-desc">See your predicted score, a visual factor breakdown, and risk level. Save the scenario and compare future attempts.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <div class="cta-band">
+    <h2>Ready to understand your performance?</h2>
+    <p>Join students already using AI to improve their academic outcomes.</p>
+    <a href="/signup" class="btn-hero btn-hero-primary" style="display:inline-flex;">
+      Create Free Account →
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="land-footer">
+    <div class="nav-brand" style="font-size:1.1rem;">
+      <div class="nav-brand-icon" style="width:30px;height:30px;border-radius:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      Performance Hub
+    </div>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Support</a>
+    </div>
+    <p>© 2026 Performance Hub. All rights reserved.</p>
+  </footer>
+
+  <script src="/static/js/script.js"></script>
+</body>
+</html>

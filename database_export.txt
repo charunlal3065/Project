@@ -1,0 +1,81 @@
+=== DATABASE EXPORT: educate_db ===
+
+--- TABLE: individual_performance ---
+SCHEMA:
+  performance_id (int)
+  user_id (int)
+  total_scenarios_run (int)
+  average_predicted_score (float)
+  highest_score (float)
+  lowest_score (float)
+  risk_level (varchar(20))
+  last_updated (timestamp)
+
+DATA:
+  (No data)
+
+========================================
+
+--- TABLE: login_details ---
+SCHEMA:
+  id (int)
+  username (varchar(100))
+  password (varchar(100))
+  login_time (timestamp)
+
+DATA:
+  (No data)
+
+========================================
+
+--- TABLE: login_history ---
+SCHEMA:
+  session_id (int)
+  user_id (int)
+  username (varchar(50))
+  login_time (timestamp)
+  exit_time (timestamp)
+  ip_address (varchar(45))
+  status (varchar(20))
+
+DATA:
+  (No data)
+
+========================================
+
+--- TABLE: predictions ---
+SCHEMA:
+  prediction_id (int)
+  user_id (int)
+  study_hours (float)
+  attendance (float)
+  online_courses (int)
+  assignment_completion (float)
+  stress_level (float)
+  predicted_score (float)
+  created_at (timestamp)
+
+DATA:
+  (1, 1, 8.5, 95.0, 2, 90.0, 3.0, 71.36, datetime.datetime(2026, 7, 3, 20, 46, 47))
+  (2, 2, 6.5, 92.0, 2, 85.0, 3.0, 76.245, datetime.datetime(2026, 7, 18, 20, 55, 36))
+  (3, 3, 9.0, 99.0, 3, 93.0, 2.0, 70.115, datetime.datetime(2026, 7, 18, 20, 58, 7))
+  (4, 4, 15.0, 95.0, 5, 97.0, 2.0, 76.165, datetime.datetime(2026, 7, 21, 6, 49, 43))
+
+========================================
+
+--- TABLE: users ---
+SCHEMA:
+  user_id (int)
+  username (varchar(100))
+  email (varchar(150))
+  password (varchar(255))
+  created_at (timestamp)
+
+DATA:
+  (1, 'testuser_3244', 'test_3244@example.com', 'securepassword123', datetime.datetime(2026, 7, 3, 20, 46, 47))
+  (2, 'tester123_4', 'tester123_4@example.com', 'password123', datetime.datetime(2026, 7, 18, 20, 55, 36))
+  (3, 'charunlal30@gmail.com', 'charunlal30@gmail.com', 'Charun@12', datetime.datetime(2026, 7, 18, 20, 57, 31))
+  (4, 'charunvenkat@gmail.com', 'charunvenkat@gmail.com', 'Venkat@1234', datetime.datetime(2026, 7, 21, 6, 46, 14))
+
+========================================
+
